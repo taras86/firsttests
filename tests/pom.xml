@@ -24,6 +24,14 @@
             <artifactId>hamcrest-all</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-firefox-driver</artifactId>
+        </dependency>
+        <dependency>
             <artifactId>client</artifactId>
             <groupId>taras86</groupId>
         </dependency>
