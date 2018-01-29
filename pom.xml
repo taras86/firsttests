@@ -50,6 +50,11 @@
                 <artifactId>selenium-firefox-driver</artifactId>
                 <version>3.8.1</version>
             </dependency>
+            <dependency>
+                <groupId>org.aeonbits.owner</groupId>
+                <artifactId>owner</artifactId>
+                <version>1.0.9</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

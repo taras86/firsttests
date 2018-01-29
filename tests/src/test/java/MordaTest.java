@@ -1,7 +1,9 @@
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -29,7 +31,7 @@ public class MordaTest {
         WebElement findButton = driver.findElement(By.cssSelector(".home-arrow__search .search2__button"));
         findButton.click();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        assertEquals("Яндекс",driver.getTitle());
+        assertEquals("Яндекс", driver.getTitle());
     }
 
     @AfterClass
