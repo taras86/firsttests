@@ -2,6 +2,8 @@ import org.aeonbits.owner.ConfigFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,6 +18,7 @@ import org.aeonbits.owner.Config;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+@RunWith(Parameterized.class)
 public class VkSendMessages {
 
     @Config.Sources({"file:${JAVA_CFG}/vk.properties"})
@@ -34,9 +37,20 @@ public class VkSendMessages {
     private static WebDriver driver;
     private static vkconfig cfg = ConfigFactory.create(vkconfig.class);
 
+    @Parameterized.Parameters
+    public static Object[] data() {
+        return new Object[] { 1, 2, 3 };
+    }
+
+    private int number;
+
+    public VkSendMessages(int number){
+        this.number = number;
+    }
+
+
     @BeforeClass
     public static void openPageAndAuthorization() {
-        System.setProperty("webdriver.gecko.driver", "C://webdrivers/geckodriver/geckodriver.exe");
         driver = new FirefoxDriver();
         driver.manage().window().maximize();
         driver.get(cfg.site());
@@ -45,15 +59,6 @@ public class VkSendMessages {
         driver.findElement(By.xpath("//*[@id='index_login_button']")).click();
         new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By
                 .xpath("//*[@id='l_fr']//a[@href='/friends']")));
-    }
-
-    @AfterClass
-    public static void logoutAndQuitDriver() {
-        driver.findElement(By.xpath("//*[@id='top_profile_link']")).click();
-        driver.findElement(By.xpath("//*[@id='top_logout_link']")).click();
-        new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//*[@id='top_reg_link']")));
-        driver.quit();
     }
 
     @Test
@@ -70,12 +75,25 @@ public class VkSendMessages {
         String message = "Привет" + String.valueOf(messageDate);
         new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By
                 .xpath("//*[@id='mail_box_editable']")));
+        driver.findElement(By.xpath("//*[@id='mail_box_editable']")).clear();
         driver.findElement(By.xpath("//*[@id='mail_box_editable']")).sendKeys(message);
         driver.findElement(By.xpath("//*[@id='mail_box_send']")).click();
         //проверка успешности отправки сообщения
         driver.get(cfg.site() + "/im?sel=" + cfg.friendId());
         WebElement myMessage = driver.findElement(By
                 .xpath(format("//*[@class='im-mess--text wall_module _im_log_body' and contains(., '%s')]", message)));
-        assertThat(myMessage).isNotNull();
+        assertThat(myMessage).isNotNull().as(format("Тест №%s провален: отправленное сообщение не найдено!", number));
+        System.out.println(format("Тест №%s пройден успешно: отправленное сообщение найдено!", number));
+    }
+
+    @AfterClass
+    public static void logoutAndQuitDriver() {
+        driver.findElement(By.xpath("//*[@id='top_profile_link']")).click();
+        driver.findElement(By.xpath("//*[@id='top_logout_link']")).click();
+        new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By
+                .xpath("//*[@id='top_reg_link']")));
+        driver.quit();
     }
 }
+
+
